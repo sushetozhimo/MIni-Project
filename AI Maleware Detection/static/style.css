@@ -1,0 +1,153 @@
+/* Modern Cyberpunk Dark Theme Design System */
+
+:root {
+    --bg-dark-primary: #0b0f19;
+    --bg-dark-secondary: #111827;
+    --bg-card: rgba(17, 24, 39, 0.85);
+    --border-cyber: rgba(56, 189, 248, 0.25);
+    --cyber-blue: #38bdf8;
+    --cyber-blue-glow: rgba(56, 189, 248, 0.4);
+    --cyber-purple: #8b5cf6;
+    --text-muted: #94a3b8;
+}
+
+body.bg-cyber {
+    background-color: var(--bg-dark-primary);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: #f8fafc;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Navigation */
+.bg-dark-glass {
+    background: rgba(11, 15, 25, 0.85) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.text-cyber-glow {
+    color: #ffffff;
+    text-shadow: 0 0 12px var(--cyber-blue-glow);
+}
+
+.text-cyber-blue {
+    color: var(--cyber-blue) !important;
+}
+
+.text-cyber-muted {
+    color: var(--text-muted) !important;
+}
+
+.border-cyber {
+    border-color: var(--border-cyber) !important;
+}
+
+/* Custom Cyber Cards */
+.cyber-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-cyber);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.bg-dark-card {
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Verdict Alerts Glassmorphism */
+.bg-danger-glass {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.9), rgba(153, 27, 27, 0.95));
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+}
+
+.bg-success-glass {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(4, 120, 87, 0.95));
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+}
+
+/* Drag and Drop Zone */
+.upload-zone {
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px dashed rgba(56, 189, 248, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover, .upload-zone.border-cyber-blue {
+    border-color: var(--cyber-blue) !important;
+    background: rgba(56, 189, 248, 0.05);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+.file-input-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.bg-cyber-dark {
+    background: rgba(15, 23, 42, 0.8) !important;
+}
+
+/* Cyber Buttons & Gradients */
+.bg-cyber-gradient {
+    background: linear-gradient(135deg, #0284c7 0%, #6366f1 100%) !important;
+}
+
+.btn-cyber-gradient {
+    background: linear-gradient(135deg, #0284c7 0%, #6366f1 100%);
+    border: none;
+    transition: all 0.25s ease;
+}
+
+.btn-cyber-gradient:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #4f46e5 100%);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-cyber-action {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    border: none;
+    transition: all 0.25s ease;
+}
+
+.btn-cyber-action:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+    box-shadow: 0 0 25px rgba(124, 58, 237, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-outline-cyber {
+    color: var(--cyber-blue);
+    border-color: var(--border-cyber);
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-cyber:hover {
+    background: rgba(56, 189, 248, 0.1);
+    color: #ffffff;
+    border-color: var(--cyber-blue);
+}
+
+/* Custom Cyber Progress Bar */
+.cyber-progress {
+    background-color: #1e293b !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}

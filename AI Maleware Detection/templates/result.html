@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Results | Hybrid AI Malware Detection</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Cyber CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-cyber font-sans">
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-glass sticky-top shadow-lg border-bottom border-cyber">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-cyber-glow" href="/">
+                <i class="fa-solid fa-shield-halved text-cyber-blue fa-lg"></i>
+                <span>Hybrid AI CyberDefense</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/" class="btn btn-outline-cyber btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i> Scan Another File
+                </a>
+                <a href="/history" class="btn btn-outline-cyber btn-sm">
+                    <i class="fa-solid fa-clock-rotate-left me-1"></i> Audit History
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Results Section -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-11 col-xl-10">
+
+                <!-- 1. VERDICT HEADER CARD -->
+                {% if result.is_malware %}
+                <div class="card border-0 bg-danger-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div>
+                                <div class="badge bg-danger text-white px-3 py-2 rounded-pill fw-bold mb-2">
+                                    <i class="fa-solid fa-triangle-exclamation me-1"></i> HIGH RISK DETECTED
+                                </div>
+                                <h1 class="display-6 fw-extrabold mb-1">{{ result.verdict }}</h1>
+                                <p class="lead mb-0 text-white-50">Threat Pattern Identified in Target Binary</p>
+                            </div>
+                            <div class="verdict-icon-box text-danger">
+                                <i class="fa-solid fa-bug fa-4x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card border-0 bg-success-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div>
+                                <div class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold mb-2">
+                                    <i class="fa-solid fa-circle-check me-1"></i> CLEAN / BENIGN FILE
+                                </div>
+                                <h1 class="display-6 fw-extrabold mb-1">File Classified as Benign</h1>
+                                <p class="lead mb-0 text-white-50">No Threat Signatures or Malicious Structural Invariants Found</p>
+                            </div>
+                            <div class="verdict-icon-box text-success">
+                                <i class="fa-solid fa-shield-check fa-4x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Detailed Metric Grid -->
+                <div class="row g-4 mb-4">
+                    <!-- Detection Pipeline Card -->
+                    <div class="col-md-6">
+                        <div class="cyber-card p-4 rounded-4 h-100 shadow">
+                            <div class="text-cyber-muted small text-uppercase fw-bold mb-1">Detection Pipeline</div>
+                            <div class="d-flex align-items-center gap-3">
+                                {% if result.signature_matched %}
+                                    <div class="icon-circle bg-info-subtle text-info p-3 rounded-circle">
+                                        <i class="fa-solid fa-database fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white fw-bold mb-0">Signature-Based Detection</h4>
+                                        <span class="text-info small fw-bold">Matched in Local SQLite (MalwareBazaar Catalog)</span>
+                                    </div>
+                                {% else %}
+                                    <div class="icon-circle bg-warning-subtle text-warning p-3 rounded-circle">
+                                        <i class="fa-solid fa-brain fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white fw-bold mb-0">Cross-Dataset Stable AI</h4>
+                                        <span class="text-warning small fw-bold">Top-{{ result.k_selected or 100 }} Consensus Features + Random Forest</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Classification Card -->
+                    <div class="col-md-6">
+                        <div class="cyber-card p-4 rounded-4 h-100 shadow">
+                            <div class="text-cyber-muted small text-uppercase fw-bold mb-1">Threat Classification / Family</div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-circle bg-purple-subtle text-purple p-3 rounded-circle">
+                                    <i class="fa-solid fa-virus fa-2x text-cyber-blue"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white fw-bold mb-0">{{ result.malware_family }}</h4>
+                                    <span class="text-cyber-muted small">Family Identification Metadata</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIGNATURE DETECTION INFORMATION CARD (When caught by signature) -->
+                {% if result.signature_matched %}
+                <div class="cyber-card p-4 rounded-4 shadow mb-4 border border-info">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <div class="icon-circle bg-info-subtle text-info p-2 rounded-circle">
+                            <i class="fa-solid fa-shield-virus fa-lg"></i>
+                        </div>
+                        <h5 class="text-white fw-bold mb-0">Definitive Signature Detection</h5>
+                    </div>
+                    <p class="text-light small mb-2">
+                        This binary was identified with <strong>100.0% certainty</strong> by its cryptographic hash in the <strong>MalwareBazaar Catalog</strong>.
+                    </p>
+                    <div class="p-3 bg-cyber-dark rounded-3 border border-secondary text-cyber-muted small">
+                        <i class="fa-solid fa-circle-info text-info me-1"></i>
+                        <strong>Pipeline Note:</strong> Because this file was definitively identified via cryptographic hash verification, Machine Learning (Random Forest) inference and Explainable AI (XAI) feature attribution were bypassed.
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Confidence Score & File Hashes Section -->
+                <div class="cyber-card p-4 rounded-4 shadow mb-4">
+                    <h5 class="text-white fw-bold mb-3">
+                        <i class="fa-solid fa-chart-line text-cyber-blue me-2"></i> Detection Confidence Score
+                    </h5>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-white fw-bold">Scan Confidence:</span>
+                        <span class="fs-4 fw-extrabold {% if result.is_malware %}text-danger{% else %}text-success{% endif %}">
+                            {{ result.confidence_score }}%
+                        </span>
+                    </div>
+
+                    <div class="progress cyber-progress rounded-pill bg-dark mb-4" style="height: 18px;">
+                        <div class="progress-bar {% if result.is_malware %}bg-danger{% else %}bg-success{% endif %} progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: {{ result.confidence_score }}%;">
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <!-- Cryptographic Hashes Table -->
+                    <h5 class="text-white fw-bold mb-3">
+                        <i class="fa-solid fa-hashtag text-cyber-blue me-2"></i> Cryptographic File Hashes
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover rounded-3 overflow-hidden border-cyber mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold text-cyber-blue" style="width: 150px;">File Name</td>
+                                    <td class="font-monospace text-white">{{ result.filename }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-cyber-blue">SHA-256 Digest</td>
+                                    <td class="font-monospace text-warning text-break">{{ result.sha256 }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-cyber-blue">MD5 Hash</td>
+                                    <td class="font-monospace text-cyber-muted text-break">{{ result.md5 }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-cyber-blue">SHA-1 Hash</td>
+                                    <td class="font-monospace text-cyber-muted text-break">{{ result.sha1 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AI EXPLAINABILITY & COMPARISON (ONLY WHEN PASSED TO RANDOM FOREST) -->
+                {% if not result.signature_matched and result.comparison %}
+
+                <!-- 2. SIDE-BY-SIDE DUAL-MODEL COMPARISON TABLE -->
+                <div class="cyber-card p-4 rounded-4 shadow mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <h5 class="text-white fw-bold mb-0">
+                                <i class="fa-solid fa-code-compare text-cyber-blue me-2"></i> Dual-Model Head-to-Head Comparison
+                            </h5>
+                            <span class="text-cyber-muted small">Live empirical evaluation: Full Baseline (2,381 Features) vs Proposed Stable (Top-{{ result.comparison.proposed_stable.k }} Features)</span>
+                        </div>
+                        <span class="badge bg-cyber-gradient text-white px-3 py-2 rounded-pill fw-bold">
+                            Active Subset: Top-{{ result.comparison.proposed_stable.k }} ({{ result.comparison.proposed_stable.pruning_pct }}% Pruned)
+                        </span>
+                    </div>
+
+                    <!-- Exact Side-by-Side Comparison Layout -->
+                    <div class="table-responsive rounded-3 border-cyber overflow-hidden">
+                        <table class="table table-dark table-bordered border-cyber align-middle text-center mb-0">
+                            <thead>
+                                <tr class="bg-cyber-dark">
+                                    <th class="w-50 py-3 text-uppercase text-secondary fw-bold fs-6">
+                                        <i class="fa-solid fa-layer-group me-1"></i> {{ result.comparison.full_baseline.title }}
+                                    </th>
+                                    <th class="w-50 py-3 text-uppercase text-cyber-blue fw-bold fs-6 border-start border-cyber bg-dark-card">
+                                        <i class="fa-solid fa-microchip me-1"></i> {{ result.comparison.proposed_stable.title }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-monospace">
+                                <tr>
+                                    <td class="py-3">
+                                        <span class="text-secondary small d-block">Verdict:</span>
+                                        <span class="fs-5 fw-extrabold {% if result.comparison.full_baseline.is_malware %}text-danger{% else %}text-success{% endif %}">
+                                            {{ result.comparison.full_baseline.verdict }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 border-start border-cyber bg-dark-card">
+                                        <span class="text-cyber-muted small d-block">Verdict:</span>
+                                        <span class="fs-5 fw-extrabold {% if result.comparison.proposed_stable.is_malware %}text-danger{% else %}text-success{% endif %}">
+                                            {{ result.comparison.proposed_stable.verdict }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3">
+                                        <span class="text-secondary small d-block">Confidence:</span>
+                                        <span class="fs-5 fw-bold text-white">{{ result.comparison.full_baseline.confidence }}%</span>
+                                    </td>
+                                    <td class="py-3 border-start border-cyber bg-dark-card">
+                                        <span class="text-cyber-muted small d-block">Confidence:</span>
+                                        <span class="fs-5 fw-bold text-cyber-blue">{{ result.comparison.proposed_stable.confidence }}%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3">
+                                        <span class="text-secondary small d-block">Latency:</span>
+                                        <span class="fs-6 fw-bold text-secondary">{{ result.comparison.full_baseline.latency_ms }} ms</span>
+                                    </td>
+                                    <td class="py-3 border-start border-cyber bg-dark-card">
+                                        <span class="text-cyber-muted small d-block">Latency:</span>
+                                        <span class="fs-6 fw-bold text-success">
+                                            {{ result.comparison.proposed_stable.latency_ms }} ms 
+                                            <span class="badge bg-success-subtle text-success border border-success ms-1">({{ result.comparison.proposed_stable.speedup_text }})</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3">
+                                        <span class="text-secondary small d-block">Dimensions:</span>
+                                        <span class="fs-6 fw-bold text-secondary">{{ result.comparison.full_baseline.dimensions }}</span>
+                                    </td>
+                                    <td class="py-3 border-start border-cyber bg-dark-card">
+                                        <span class="text-cyber-muted small d-block">Dimensions:</span>
+                                        <span class="fs-6 fw-bold text-warning">{{ result.comparison.proposed_stable.dimensions }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. COMPLETELY SEPARATE EXPLAINABLE AI (XAI) SECTION -->
+                {% if result.top_5_contributions %}
+                <div class="cyber-card p-4 rounded-4 shadow mb-4 border border-info-subtle">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <h5 class="text-white fw-bold mb-1">
+                                <i class="fa-solid fa-brain text-cyber-blue me-2"></i> Top 5 Contributing Stable Features (Explainable AI)
+                            </h5>
+                            <p class="text-cyber-muted small mb-0">Feature attribution ranking the key invariant PE attributes that drove the model's verdict for this binary</p>
+                        </div>
+                        <span class="badge bg-info-subtle text-info border border-info px-3 py-2 fw-bold">
+                            <i class="fa-solid fa-magnifying-glass-chart me-1"></i> XAI Feature Attribution
+                        </span>
+                    </div>
+
+                    <!-- Dedicated Standalone Feature Attribution Cards -->
+                    <div class="list-group list-group-flush rounded-3 border-cyber overflow-hidden">
+                        {% for feat in result.top_5_contributions %}
+                        <div class="list-group-item bg-dark-card text-white border-cyber p-3">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="badge bg-cyber-gradient text-white fw-extrabold fs-6 px-2 py-1">#{{ feat.rank }}</span>
+                                    <span class="badge bg-secondary-subtle text-info border border-secondary px-2 py-1 font-monospace">
+                                        [{{ feat.category }}]
+                                    </span>
+                                    <span class="fw-bold text-white fs-6">{{ feat.name }}</span>
+                                    <span class="text-secondary small font-monospace">[Index {{ feat.global_index }}]</span>
+                                </div>
+                                <div class="text-end font-monospace">
+                                    <span class="text-cyber-muted small me-2">Impact:</span>
+                                    <span class="fw-bold text-success fs-6">{{ feat.impact_formatted }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="p-2 rounded-2 bg-cyber-dark border border-cyber text-light small d-flex align-items-start gap-2">
+                                <i class="fa-solid fa-shield-halved text-cyber-blue mt-1"></i>
+                                <div>
+                                    <strong>Security Interpretation:</strong> {{ feat.explanation }}
+                                    <span class="text-cyber-muted ms-2">(Extracted Value: <code class="text-warning">{{ feat.value }}</code> | Weight: <code class="text-info">{{ feat.importance }}</code>)</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- 4. RESEARCH BENCHMARK & METHODOLOGY SECTION (SEPARATE CARD) -->
+                <div class="cyber-card p-4 rounded-4 shadow mb-4">
+                    <h5 class="text-white fw-bold mb-3">
+                        <i class="fa-solid fa-graduation-cap text-cyber-blue me-2"></i> Cross-Dataset Stable PE Feature Selection (Research Methodology)
+                    </h5>
+                    
+                    <div class="p-3 rounded-3 bg-dark-card border border-secondary mb-3 small text-light lh-lg">
+                        <p class="mb-2">
+                            <strong>The Problem:</strong> Models trained on a single year's dataset (e.g. EMBER 2018) rapidly decay over time because they overfit to transient temporal artifacts (e.g., year-specific import table hashes or compiler versions) that adversaries modify or deprecate.
+                        </p>
+                        <p class="mb-0">
+                            <strong>Multi-Year Consensus:</strong> Our algorithm measures feature stability across independent temporal distributions (<strong>EMBER 2017 v2</strong> and <strong>EMBER 2018</strong>). Only features that consistently retain high discriminative power across both years are selected into the <strong>Top-K Consensus Subset</strong>, recovering <strong>+295 missed threats (false negatives)</strong> under temporal distribution shift on the 2020 BODMAS benchmark.
+                        </p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-bordered border-cyber small text-center mb-0">
+                            <thead class="bg-cyber-dark text-cyber-blue">
+                                <tr>
+                                    <th>Model Configuration</th>
+                                    <th>Features (K)</th>
+                                    <th>Pruning Rate</th>
+                                    <th>OOD Shift Accuracy (2020)</th>
+                                    <th>ROC-AUC</th>
+                                    <th>Inference Latency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-start fw-bold">Full Baseline Model (2018)</td>
+                                    <td>2,381</td>
+                                    <td>0.0%</td>
+                                    <td>83.48%</td>
+                                    <td>0.9251</td>
+                                    <td>7.42 ms</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start text-danger fw-bold">Single-Dataset Top-100 (Naive)</td>
+                                    <td>100</td>
+                                    <td>95.8%</td>
+                                    <td>68.01%</td>
+                                    <td>0.8403</td>
+                                    <td>1.86 ms</td>
+                                </tr>
+                                <tr class="table-active border-success">
+                                    <td class="text-start text-success fw-bold">
+                                        <i class="fa-solid fa-check-circle me-1"></i> Proposed Stable Top-100 (Optimal)
+                                    </td>
+                                    <td class="text-success fw-bold">100</td>
+                                    <td class="text-success fw-bold">95.8%</td>
+                                    <td class="text-success fw-bold">71.09% (+3.08% Gain)</td>
+                                    <td class="text-success fw-bold">0.8797 (+0.039 AUC)</td>
+                                    <td class="text-success fw-bold">1.90 ms (74% Speedup)</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start text-info fw-bold">Proposed Stable Top-200</td>
+                                    <td>200</td>
+                                    <td>91.6%</td>
+                                    <td>77.54%</td>
+                                    <td>0.9203 (Matches Full)</td>
+                                    <td>2.80 ms (62% Speedup)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. RAW EMBER FEATURE VECTOR SUMMARY -->
+                {% if result.metadata %}
+                <div class="cyber-card p-4 rounded-4 shadow mb-4">
+                    <h5 class="text-white fw-bold mb-3">
+                        <i class="fa-solid fa-cubes text-cyber-blue me-2"></i> Raw EMBER Feature Vector Summary
+                    </h5>
+                    <div class="row g-3 text-center">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
+                                <div class="text-cyber-muted small">File Size</div>
+                                <div class="fw-bold text-white fs-5">{{ (result.metadata.file_size_bytes / 1024)|round(1) }} KB</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
+                                <div class="text-cyber-muted small">Entropy Score</div>
+                                <div class="fw-bold text-info fs-5">{{ result.metadata.overall_entropy }} / 8.0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
+                                <div class="text-cyber-muted small">PE Binary Format</div>
+                                <div class="fw-bold {% if result.metadata.is_pe_header %}text-success{% else %}text-warning{% endif %} fs-5">
+                                    {{ "Valid PE (MZ)" if result.metadata.is_pe_header else "Raw Binary" }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
+                                <div class="text-cyber-muted small">Raw Vector Dimensions</div>
+                                <div class="fw-bold text-cyber-blue fs-5">{{ result.metadata.feature_count }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% endif %} <!-- End of not result.signature_matched -->
+
+                <!-- ACTION BUTTON CONTROLS -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="/" class="btn btn-cyber-gradient btn-lg px-4 rounded-pill fw-bold text-white shadow">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Scan Another Binary
+                    </a>
+                    <a href="/history" class="btn btn-outline-cyber btn-lg px-4 rounded-pill fw-bold">
+                        <i class="fa-solid fa-clock-rotate-left me-2"></i> Audit History
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

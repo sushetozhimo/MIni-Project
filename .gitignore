@@ -1,0 +1,36 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+env/
+ENV/
+.venv/
+
+# Large Datasets (Over GitHub's 100 MB limit)
+EMBER 2018 dataset/
+ember_2017_2/
+BODMAS dataset/
+processed_data/
+*.npz
+*.h5
+*.parquet
+*.tar.gz
+*.zip
+
+# Uploaded scan binaries (temporary user uploads)
+AI Maleware Detection/uploads/*
+!AI Maleware Detection/uploads/.gitkeep
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

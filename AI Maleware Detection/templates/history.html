@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Audit History | Hybrid AI Malware Detection</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Cyber CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-cyber font-sans">
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-glass sticky-top shadow-lg border-bottom border-cyber">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-cyber-glow" href="/">
+                <i class="fa-solid fa-shield-halved text-cyber-blue fa-lg"></i>
+                <span>Hybrid AI CyberDefense</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/" class="btn btn-cyber-gradient btn-sm text-white fw-bold">
+                    <i class="fa-solid fa-plus me-1"></i> Scan File
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <!-- Flash Alert Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category in ['danger', 'error'] else 'success' }} alert-dismissible fade show cyber-card border-0 mb-4 text-white shadow" role="alert">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid {{ 'fa-circle-exclamation text-danger' if category in ['danger', 'error'] else 'fa-circle-check text-success' }} fa-lg"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div>
+                <h2 class="text-white fw-extrabold mb-1">Scan Audit History</h2>
+                <p class="text-cyber-muted mb-0">Historical record of all analyzed files, verdicts, and detection methods</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                {% if logs %}
+                <form action="{{ url_for('clear_history') }}" method="POST" onsubmit="return confirm('WARNING: Are you sure you want to permanently clear all scan history? This action cannot be undone.');" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger btn-sm px-3 py-2 fw-semibold shadow-sm">
+                        <i class="fa-solid fa-trash-can me-1"></i> Clear All History
+                    </button>
+                </form>
+                {% endif %}
+                <a href="/" class="btn btn-outline-cyber btn-sm px-3 py-2 fw-semibold">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Scanner
+                </a>
+            </div>
+        </div>
+
+        <div class="cyber-card p-4 rounded-4 shadow-2xl">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead class="border-bottom border-cyber text-cyber-blue">
+                        <tr>
+                            <th>#</th>
+                            <th>File Name</th>
+                            <th>Detection Method</th>
+                            <th>Verdict</th>
+                            <th>Malware Family</th>
+                            <th>Confidence</th>
+                            <th>SHA-256 Hash</th>
+                            <th>Timestamp</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if logs %}
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.id }}</td>
+                                <td class="fw-bold text-white">{{ log.filename }}</td>
+                                <td>
+                                    {% if log.detection_method == 'Signature-Based Detection' %}
+                                        <span class="badge bg-info text-dark fw-bold"><i class="fa-solid fa-database me-1"></i> Signature</span>
+                                    {% elif 'Stable' in log.detection_method %}
+                                        <span class="badge bg-warning text-dark fw-bold"><i class="fa-solid fa-brain me-1"></i> Stable AI</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark fw-bold"><i class="fa-solid fa-brain me-1"></i> AI Model</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if 'Malware' in log.verdict %}
+                                        <span class="badge bg-danger text-white px-2 py-1"><i class="fa-solid fa-bug me-1"></i> {{ log.verdict }}</span>
+                                    {% else %}
+                                        <span class="badge bg-success text-white px-2 py-1"><i class="fa-solid fa-check me-1"></i> Benign</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-info font-monospace small">{{ log.malware_family or 'N/A' }}</td>
+                                <td class="fw-bold">{{ log.confidence_score }}%</td>
+                                <td class="font-monospace small text-cyber-muted text-truncate" style="max-width: 140px;" title="{{ log.sha256_hash }}">
+                                    {{ log.sha256_hash }}
+                                </td>
+                                <td class="text-cyber-muted small">{{ log.scanned_at }}</td>
+                                <td class="text-center">
+                                    <form action="{{ url_for('delete_log', log_id=log.id) }}" method="POST" onsubmit="return confirm('Delete scan log #{{ log.id }} for &quot;{{ log.filename }}&quot;?');" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2 py-1" title="Delete record #{{ log.id }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center text-cyber-muted py-5">
+                                    <i class="fa-solid fa-inbox fa-3x mb-3 text-secondary d-block"></i>
+                                    <h5 class="text-white fw-bold">No Scan Logs Found</h5>
+                                    <p class="mb-3 text-cyber-muted">No scan history exists. Upload and analyze a file to populate audit logs.</p>
+                                    <a href="/" class="btn btn-cyber-gradient btn-sm px-3 py-2 text-white fw-bold">
+                                        <i class="fa-solid fa-plus me-1"></i> Start New Scan
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

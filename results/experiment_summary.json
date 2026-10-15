@@ -1,0 +1,176 @@
+{
+  "rho": 0.9216789316902101,
+  "jaccard_results": {
+    "20": {
+      "intersection": 13,
+      "union": 27,
+      "jaccard": 0.48148148148148145
+    },
+    "50": {
+      "intersection": 26,
+      "union": 74,
+      "jaccard": 0.35135135135135137
+    },
+    "100": {
+      "intersection": 57,
+      "union": 143,
+      "jaccard": 0.3986013986013986
+    },
+    "200": {
+      "intersection": 119,
+      "union": 281,
+      "jaccard": 0.4234875444839858
+    },
+    "500": {
+      "intersection": 403,
+      "union": 597,
+      "jaccard": 0.6750418760469011
+    }
+  },
+  "matrix_results": {
+    "EMBER 2017": {
+      "EMBER 2017 Test": {
+        "accuracy": 0.9498,
+        "precision": 0.9718841796055392,
+        "recall": 0.9264,
+        "f1": 0.9485971738685235,
+        "roc_auc": 0.9845342399999999,
+        "latency_ms_per_1k": 7.6114654541015625
+      },
+      "EMBER 2018 Test": {
+        "accuracy": 0.8572,
+        "precision": 0.8309859154929577,
+        "recall": 0.8968,
+        "f1": 0.8626394767218161,
+        "roc_auc": 0.92436024,
+        "latency_ms_per_1k": 7.386326789855957
+      },
+      "BODMAS Test": {
+        "accuracy": 0.8899840071409975,
+        "precision": 0.8796784278695846,
+        "recall": 0.859411816039794,
+        "f1": 0.8694270327535976,
+        "roc_auc": 0.9604682608552914,
+        "latency_ms_per_1k": 7.824061212806759
+      }
+    },
+    "EMBER 2018": {
+      "EMBER 2017 Test": {
+        "accuracy": 0.9275,
+        "precision": 0.9435567545133845,
+        "recall": 0.9094,
+        "f1": 0.926163560444037,
+        "roc_auc": 0.9772721799999999,
+        "latency_ms_per_1k": 6.7742109298706055
+      },
+      "EMBER 2018 Test": {
+        "accuracy": 0.8182,
+        "precision": 0.7651666666666667,
+        "recall": 0.9182,
+        "f1": 0.8347272727272728,
+        "roc_auc": 0.8997361400000001,
+        "latency_ms_per_1k": 6.96558952331543
+      },
+      "BODMAS Test": {
+        "accuracy": 0.8347528545393684,
+        "precision": 0.7774438468838974,
+        "recall": 0.8578409983419146,
+        "f1": 0.8156660996556445,
+        "roc_auc": 0.9250795686611438,
+        "latency_ms_per_1k": 7.4196088822603485
+      }
+    }
+  },
+  "comparison_results": [
+    {
+      "Method": "Full Feature Baseline",
+      "K_Features": 2381,
+      "Accuracy_BODMAS": 0.8347528545393684,
+      "F1_BODMAS": 0.8156660996556445,
+      "ROC_AUC_BODMAS": 0.9250795686611438,
+      "Latency_ms_per_1k": 7.4196088822603485,
+      "Model_Size_MB": 5.27,
+      "Gen_Gap_to_BODMAS": -0.0166
+    },
+    {
+      "Method": "Single-Dataset Top-20",
+      "K_Features": 20,
+      "Accuracy_BODMAS": 0.6274779633280024,
+      "F1_BODMAS": 0.6445706174591909,
+      "ROC_AUC_BODMAS": 0.6715619973752733,
+      "Latency_ms_per_1k": 1.4052747700263777,
+      "Model_Size_MB": 6.62,
+      "Gen_Gap_to_BODMAS": 0.0232
+    },
+    {
+      "Method": "Proposed Stable Top-20",
+      "K_Features": 20,
+      "Accuracy_BODMAS": 0.6432848588537211,
+      "F1_BODMAS": 0.6633910083178325,
+      "ROC_AUC_BODMAS": 0.696235587629968,
+      "Latency_ms_per_1k": 1.4399375522522864,
+      "Model_Size_MB": 6.26,
+      "Gen_Gap_to_BODMAS": 0.0137
+    },
+    {
+      "Method": "Single-Dataset Top-50",
+      "K_Features": 50,
+      "Accuracy_BODMAS": 0.6868003124186409,
+      "F1_BODMAS": 0.6985502058349741,
+      "ROC_AUC_BODMAS": 0.8058686866680259,
+      "Latency_ms_per_1k": 1.8280915472317447,
+      "Model_Size_MB": 5.36,
+      "Gen_Gap_to_BODMAS": -0.0026
+    },
+    {
+      "Method": "Proposed Stable Top-50",
+      "K_Features": 50,
+      "Accuracy_BODMAS": 0.6617324357496188,
+      "F1_BODMAS": 0.6889428503026779,
+      "ROC_AUC_BODMAS": 0.7936455507537861,
+      "Latency_ms_per_1k": 1.4788123635284143,
+      "Model_Size_MB": 5.12,
+      "Gen_Gap_to_BODMAS": 0.0226
+    },
+    {
+      "Method": "Single-Dataset Top-100",
+      "K_Features": 100,
+      "Accuracy_BODMAS": 0.6801056272548072,
+      "F1_BODMAS": 0.7028912915817472,
+      "ROC_AUC_BODMAS": 0.8402954436444544,
+      "Latency_ms_per_1k": 1.8599610891401397,
+      "Model_Size_MB": 4.88,
+      "Gen_Gap_to_BODMAS": 0.0083
+    },
+    {
+      "Method": "Proposed Stable Top-100",
+      "K_Features": 100,
+      "Accuracy_BODMAS": 0.7109011790084427,
+      "F1_BODMAS": 0.7281502465638443,
+      "ROC_AUC_BODMAS": 0.879703846810951,
+      "Latency_ms_per_1k": 1.9010261555223815,
+      "Model_Size_MB": 4.48,
+      "Gen_Gap_to_BODMAS": -0.0096
+    },
+    {
+      "Method": "Single-Dataset Top-200",
+      "K_Features": 200,
+      "Accuracy_BODMAS": 0.7790010042027746,
+      "F1_BODMAS": 0.7779687616770047,
+      "ROC_AUC_BODMAS": 0.9081931058873355,
+      "Latency_ms_per_1k": 2.3156050906484777,
+      "Model_Size_MB": 4.62,
+      "Gen_Gap_to_BODMAS": -0.04
+    },
+    {
+      "Method": "Proposed Stable Top-200",
+      "K_Features": 200,
+      "Accuracy_BODMAS": 0.7754305054487298,
+      "F1_BODMAS": 0.7757057949479941,
+      "ROC_AUC_BODMAS": 0.920292272301404,
+      "Latency_ms_per_1k": 2.7994652530784947,
+      "Model_Size_MB": 4.57,
+      "Gen_Gap_to_BODMAS": -0.0303
+    }
+  ]
+}

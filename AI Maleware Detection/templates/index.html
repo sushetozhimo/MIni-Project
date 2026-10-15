@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid AI Malware Detection System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Cyber CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="bg-cyber font-sans">
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-glass sticky-top shadow-lg border-bottom border-cyber">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-cyber-glow" href="/">
+                <i class="fa-solid fa-shield-halved text-cyber-blue fa-lg"></i>
+                <span>Hybrid AI CyberDefense</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/history" class="btn btn-outline-cyber btn-sm">
+                    <i class="fa-solid fa-clock-rotate-left me-1"></i> Scan History
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center mb-4">
+                <div class="badge bg-cyber-gradient text-white px-3 py-2 rounded-pill mb-2 shadow-sm">
+                    <i class="fa-solid fa-microchip me-1"></i> Dual-Engine Security Scanner (Cross-Dataset Consensus)
+                </div>
+                <h1 class="display-5 fw-extrabold text-white mb-2">Hybrid AI Malware Detection</h1>
+                <p class="lead text-cyber-muted">
+                    Combines <strong>Signature-Based Analysis</strong> (MalwareBazaar) & <strong>Cross-Dataset Stable AI</strong> (Top-100 Invariant Features + Lightweight RF)
+                </p>
+            </div>
+        </div>
+
+        <!-- Flash Alert Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm border-0" role="alert">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Upload Card Zone -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="cyber-card p-4 p-md-5 rounded-4 shadow-2xl position-relative">
+                    <form action="/scan" method="POST" enctype="multipart/form-data" id="uploadForm">
+
+                        <div class="upload-zone rounded-4 p-4 text-center border-dashed position-relative"
+                            id="dropZone">
+                            <input type="file" name="file" id="fileInput" class="file-input-overlay" required
+                                onchange="handleFileSelect(this)">
+
+                            <div class="upload-icon-box mx-auto mb-3 text-cyber-blue">
+                                <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
+                            </div>
+
+                            <h4 class="text-white fw-bold mb-2" id="uploadTitle">Drag & Drop Executable or File Here
+                            </h4>
+                            <p class="text-cyber-muted small mb-3" id="uploadSubtitle">Supports PE files (.exe, .dll,
+                                .bin, .sys) up to 64 MB</p>
+
+                            <div class="selected-file-badge d-none p-3 rounded-3 bg-cyber-dark border border-cyber-blue mx-auto mb-3"
+                                id="fileBadge">
+                                <i class="fa-solid fa-file-code text-cyber-blue me-2"></i>
+                                <span class="text-white fw-bold" id="fileNameDisplay">sample.exe</span>
+                                <span class="badge bg-secondary ms-2" id="fileSizeDisplay">2.4 MB</span>
+                            </div>
+
+                            <button type="button"
+                                class="btn btn-cyber-gradient px-4 py-2 rounded-pill fw-bold text-white shadow"
+                                onclick="document.getElementById('fileInput').click()">
+                                <i class="fa-solid fa-folder-open me-2"></i> Browse Computer
+                            </button>
+                        </div>
+
+                        <!-- Select Stable Feature Subset (K) -->
+                        <div class="mt-4 p-3 bg-cyber-dark rounded-3 border border-cyber text-start">
+                            <label class="form-label text-cyber-blue fw-bold small mb-2 d-flex align-items-center justify-content-between">
+                                <span><i class="fa-solid fa-sliders me-1"></i> Select Stable Feature Count (K):</span>
+                                <span class="badge bg-secondary-subtle text-cyber-muted">Multi-Year Consensus</span>
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="k_features" id="k20" value="20" autocomplete="off">
+                                    <label class="btn btn-outline-cyber w-100 py-2 text-center rounded-3 small" for="k20">
+                                        <div class="fw-bold">Top-20</div>
+                                        <div class="text-cyber-muted" style="font-size: 0.72rem;">99.2% Pruned</div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="k_features" id="k50" value="50" autocomplete="off">
+                                    <label class="btn btn-outline-cyber w-100 py-2 text-center rounded-3 small" for="k50">
+                                        <div class="fw-bold">Top-50</div>
+                                        <div class="text-cyber-muted" style="font-size: 0.72rem;">97.9% Pruned</div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="k_features" id="k100" value="100" autocomplete="off" checked>
+                                    <label class="btn btn-outline-cyber w-100 py-2 text-center rounded-3 small border-cyber-blue active" for="k100">
+                                        <div class="fw-bold text-cyber-blue">Top-100 (Opt)</div>
+                                        <div class="text-white-50" style="font-size: 0.72rem;">95.8% Pruned</div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="k_features" id="k200" value="200" autocomplete="off">
+                                    <label class="btn btn-outline-cyber w-100 py-2 text-center rounded-3 small" for="k200">
+                                        <div class="fw-bold">Top-200</div>
+                                        <div class="text-cyber-muted" style="font-size: 0.72rem;">91.6% Pruned</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress & Scanner Loading Overlay -->
+                        <div class="scan-progress-container d-none mt-4 text-center" id="progressContainer">
+                            <div
+                                class="d-flex align-items-center justify-content-center gap-2 mb-2 text-cyber-blue fw-bold">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <span id="progressText">Extracting EMBER Features & Querying Signatures...</span>
+                            </div>
+                            <div class="progress cyber-progress rounded-pill bg-dark">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-cyber-gradient"
+                                    role="progressbar" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit"
+                                class="btn btn-cyber-action btn-lg rounded-3 fw-bold text-white shadow-lg" id="scanBtn">
+                                <i class="fa-solid fa-shield-virus me-2"></i> Start Hybrid Scan
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <!-- Safety Guarantee Banner -->
+                    <div class="mt-4 pt-3 border-top border-dark-subtle text-center text-cyber-muted small">
+                        <i class="fa-solid fa-lock text-success me-1"></i> <strong>Zero-Execution Guarantee:</strong>
+                        Uploaded files are statically parsed in binary isolation and deleted immediately after
+                        inspection.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Flow Cards -->
+        <div class="row mt-5 g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="step-card p-4 rounded-3 h-100 border-0 bg-dark-card shadow">
+                    <div class="step-number text-cyber-blue mb-2 fw-bold">STEP 01</div>
+                    <h5 class="text-white fw-bold"><i class="fa-solid fa-fingerprint me-2 text-info"></i> SHA-256
+                        Signature Match</h5>
+                    <p class="text-cyber-muted small mb-0">Computes SHA-256 digest and checks against indexed SQLite
+                        database containing MalwareBazaar threat telemetry.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card p-4 rounded-3 h-100 border-0 bg-dark-card shadow">
+                    <div class="step-number text-cyber-blue mb-2 fw-bold">STEP 02</div>
+                    <h5 class="text-white fw-bold"><i class="fa-solid fa-brain me-2 text-warning"></i> EMBER Feature
+                        Vector</h5>
+                    <p class="text-cyber-muted small mb-0">If signature is clean or unknown, extracts 2381 static PE
+                        features (entropy, sections, byte histograms).</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card p-4 rounded-3 h-100 border-0 bg-dark-card shadow">
+                    <div class="step-number text-cyber-blue mb-2 fw-bold">STEP 03</div>
+                    <h5 class="text-white fw-bold"><i class="fa-solid fa-tree me-2 text-success"></i> Random Forest ML
+                    </h5>
+                    <p class="text-cyber-muted small mb-0">Predicts Malware vs Benign status with confidence scores
+                        using your pre-trained Random Forest model.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Upload UI Logic -->
+    <script>
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('fileNameDisplay').textContent = file.name;
+                document.getElementById('fileSizeDisplay').textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+                document.getElementById('fileBadge').classList.remove('d-none');
+                document.getElementById('uploadTitle').textContent = "File Ready for Hybrid Scan";
+                document.getElementById('uploadSubtitle').textContent = "Click 'Start Hybrid Scan' below to proceed.";
+            }
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', function () {
+            document.getElementById('progressContainer').classList.remove('d-none');
+            document.getElementById('scanBtn').disabled = true;
+            document.getElementById('scanBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Analyzing Binary...';
+        });
+
+        // Drag & Drop visual feedback
+        const dropZone = document.getElementById('dropZone');
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-cyber-blue');
+            }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-cyber-blue');
+            }, false);
+        });
+    </script>
+</body>
+
+</html>
