@@ -38,24 +38,31 @@ def extract_ember_features(file_input: Any) -> Tuple[np.ndarray, Dict[str, Any]]
         file_bytes = b""
 
     file_size = len(file_bytes)
-    
+    is_pe = file_bytes.startswith(b"MZ") and file_size >= 64
+    pe_parsed = False
+
     # 1. Primary Extraction using EMBER PEFeatureExtractor
-    if EMBER_AVAILABLE:
+    if is_pe and EMBER_AVAILABLE:
         try:
             extractor = ember.PEFeatureExtractor(feature_version=2, print_feature_warning=False)
             features = extractor.feature_vector(file_bytes)
             feature_vector = np.array(features, dtype=np.float32)
+            pe_parsed = True
         except Exception as e:
             print(f"[!] EMBER extraction warning: {e}. Utilizing structured fallback.")
             feature_vector = generate_fallback_feature_vector(file_bytes)
     else:
-        print("[!] EMBER library not loaded. Utilizing structured fallback feature vector.")
+        if not is_pe:
+            print("[!] Uploaded file does not have a valid DOS/PE header (missing MZ magic).")
+        else:
+            print("[!] EMBER library not loaded. Utilizing structured fallback feature vector.")
         feature_vector = generate_fallback_feature_vector(file_bytes)
 
     # 2. Extract basic summary metadata for display in the UI
     metadata = {
         "file_size_bytes": file_size,
-        "is_pe_header": file_bytes.startswith(b"MZ"),
+        "is_pe_header": is_pe,
+        "pe_parse_success": pe_parsed,
         "overall_entropy": round(calculate_entropy(file_bytes), 4),
         "feature_count": len(feature_vector),
         "sample_preview_hex": file_bytes[:16].hex() if file_bytes else ""

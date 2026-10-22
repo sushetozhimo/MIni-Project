@@ -121,13 +121,19 @@ def scan_file():
                 "signature_matched": True,
                 "signature_details": sig_result,
                 "is_malware": True,
+                "is_divergent": False,
+                "divergence": None,
                 "comparison": None,
                 "top_5_contributions": [],
                 "stable_features_info": None
             }
         else:
-            # Passed to Random Forest (Engine 2: Cross-Dataset Stable PE Feature Selection + RF)
-            # Unknown hash -> Explain it using Dual Model Comparison and Top 5 XAI Features!
+            # Engine 2: PE Machine Learning (Random Forest)
+            # Upfront PE validation: Machine Learning PE static analysis requires a valid PE file
+            if not file_bytes.startswith(b"MZ") or len(file_bytes) < 64:
+                flash(f"Upload Rejected: '{original_filename}' is not a valid Windows Portable Executable (missing DOS 'MZ' header). Static PE feature analysis requires a valid .exe, .dll, or .sys binary.", "warning")
+                return redirect(url_for('index'))
+
             target_payload = file_bytes if file_bytes else save_path
             ai_result = scan_with_ai(target_payload, k=k_features)
             verdict = ai_result["verdict"]
@@ -139,11 +145,13 @@ def scan_file():
                 "md5": hashes["md5"],
                 "sha1": hashes["sha1"],
                 "verdict": verdict,
-                "malware_family": ai_result.get("malware_family", "Clean Binary" if verdict == "BENIGN" else "Inferred Threat"),
+                "malware_family": ai_result.get("malware_family", "Clean / Legitimate Binary" if verdict == "BENIGN" else "Statistical PE Anomaly"),
                 "detection_method": ai_result.get("detection_method", f"Cross-Dataset Stable AI (Top-{k_features})"),
                 "confidence_score": ai_result["confidence_score"],
                 "probabilities": ai_result.get("probabilities", {}),
                 "metadata": ai_result.get("metadata", {}),
+                "is_divergent": ai_result.get("is_divergent", False),
+                "divergence": ai_result.get("divergence", {}),
                 "comparison": ai_result.get("comparison", {}),
                 "top_5_contributions": ai_result.get("top_5_contributions", []),
                 "all_contributions": ai_result.get("all_contributions", []),

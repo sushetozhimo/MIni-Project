@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <!-- Custom Cyber CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body class="bg-cyber font-sans">
 
     <!-- Navigation Header -->
@@ -36,9 +38,53 @@
         <div class="row justify-content-center">
             <div class="col-lg-11 col-xl-10">
 
+                <!-- MODEL DIVERGENCE / DISTRIBUTION SHIFT ALERT -->
+                {% if result.is_divergent %}
+                <div
+                    class="card border-0 bg-warning-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden border border-warning">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="icon-circle bg-warning text-dark p-2 rounded-circle">
+                                <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-warning fw-bold mb-0">Model Disagreement Detected (Distribution Shift
+                                    Alert)</h5>
+                                <span class="text-white-50 small">Full Baseline (2,381 Features) vs Proposed Stable
+                                    (Top-{{ result.k_selected or 100 }} Features)</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-cyber-dark rounded-3 border border-secondary text-light small mb-0">
+                            <p class="mb-2">
+                                <strong>Diagnosis:</strong> The Full Baseline model classified this binary as
+                                <span
+                                    class="badge {% if result.comparison.full_baseline.is_malware %}bg-danger{% else %}bg-success{% endif %}">
+                                    {{ result.comparison.full_baseline.verdict }} ({{
+                                    result.comparison.full_baseline.confidence }}%)
+                                </span>,
+                                while the lightweight Proposed Stable model predicted
+                                <span
+                                    class="badge {% if result.comparison.proposed_stable.is_malware %}bg-danger{% else %}bg-success{% endif %}">
+                                    {{ result.comparison.proposed_stable.verdict }} ({{
+                                    result.comparison.proposed_stable.confidence }}%)
+                                </span>.
+                            </p>
+                            <p class="mb-0 text-white-50">
+                                <strong>Research Explanation:</strong> {{ result.divergence.explanation if
+                                result.divergence else "Under temporal distribution shift, lightweight feature pruning
+                                concentrates decision weights onto a small subset of consensus features (such as COFF
+                                Timestamp). Modern software compiled recently can trigger false alarms in models trained
+                                on historical EMBER distributions." }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- 1. VERDICT HEADER CARD -->
                 {% if result.is_malware %}
-                <div class="card border-0 bg-danger-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
+                <div
+                    class="card border-0 bg-danger-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
                     <div class="card-body p-4 p-md-5">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div>
@@ -55,7 +101,8 @@
                     </div>
                 </div>
                 {% else %}
-                <div class="card border-0 bg-success-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
+                <div
+                    class="card border-0 bg-success-glass text-white shadow-2xl rounded-4 mb-4 overflow-hidden position-relative">
                     <div class="card-body p-4 p-md-5">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div>
@@ -63,7 +110,8 @@
                                     <i class="fa-solid fa-circle-check me-1"></i> CLEAN / BENIGN FILE
                                 </div>
                                 <h1 class="display-6 fw-extrabold mb-1">File Classified as Benign</h1>
-                                <p class="lead mb-0 text-white-50">No Threat Signatures or Malicious Structural Invariants Found</p>
+                                <p class="lead mb-0 text-white-50">No Threat Signatures or Malicious Structural
+                                    Invariants Found</p>
                             </div>
                             <div class="verdict-icon-box text-success">
                                 <i class="fa-solid fa-shield-check fa-4x"></i>
@@ -81,21 +129,23 @@
                             <div class="text-cyber-muted small text-uppercase fw-bold mb-1">Detection Pipeline</div>
                             <div class="d-flex align-items-center gap-3">
                                 {% if result.signature_matched %}
-                                    <div class="icon-circle bg-info-subtle text-info p-3 rounded-circle">
-                                        <i class="fa-solid fa-database fa-2x"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-white fw-bold mb-0">Signature-Based Detection</h4>
-                                        <span class="text-info small fw-bold">Matched in Local SQLite (MalwareBazaar Catalog)</span>
-                                    </div>
+                                <div class="icon-circle bg-info-subtle text-info p-3 rounded-circle">
+                                    <i class="fa-solid fa-database fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white fw-bold mb-0">Signature-Based Detection</h4>
+                                    <span class="text-info small fw-bold">Matched in Local SQLite (MalwareBazaar
+                                        Catalog)</span>
+                                </div>
                                 {% else %}
-                                    <div class="icon-circle bg-warning-subtle text-warning p-3 rounded-circle">
-                                        <i class="fa-solid fa-brain fa-2x"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-white fw-bold mb-0">Cross-Dataset Stable AI</h4>
-                                        <span class="text-warning small fw-bold">Top-{{ result.k_selected or 100 }} Consensus Features + Random Forest</span>
-                                    </div>
+                                <div class="icon-circle bg-warning-subtle text-warning p-3 rounded-circle">
+                                    <i class="fa-solid fa-brain fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white fw-bold mb-0">Cross-Dataset Stable AI</h4>
+                                    <span class="text-warning small fw-bold">Top-{{ result.k_selected or 100 }}
+                                        Consensus Features + Random Forest</span>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -104,7 +154,8 @@
                     <!-- Threat Classification Card -->
                     <div class="col-md-6">
                         <div class="cyber-card p-4 rounded-4 h-100 shadow">
-                            <div class="text-cyber-muted small text-uppercase fw-bold mb-1">Threat Classification / Family</div>
+                            <div class="text-cyber-muted small text-uppercase fw-bold mb-1">Threat Classification /
+                                Family</div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="icon-circle bg-purple-subtle text-purple p-3 rounded-circle">
                                     <i class="fa-solid fa-virus fa-2x text-cyber-blue"></i>
@@ -128,11 +179,14 @@
                         <h5 class="text-white fw-bold mb-0">Definitive Signature Detection</h5>
                     </div>
                     <p class="text-light small mb-2">
-                        This binary was identified with <strong>100.0% certainty</strong> by its cryptographic hash in the <strong>MalwareBazaar Catalog</strong>.
+                        This binary was identified with <strong>100.0% certainty</strong> by its cryptographic hash in
+                        the <strong>MalwareBazaar Catalog</strong>.
                     </p>
                     <div class="p-3 bg-cyber-dark rounded-3 border border-secondary text-cyber-muted small">
                         <i class="fa-solid fa-circle-info text-info me-1"></i>
-                        <strong>Pipeline Note:</strong> Because this file was definitively identified via cryptographic hash verification, Machine Learning (Random Forest) inference and Explainable AI (XAI) feature attribution were bypassed.
+                        <strong>Pipeline Note:</strong> Because this file was definitively identified via cryptographic
+                        hash verification, Machine Learning (Random Forest) inference and Explainable AI (XAI) feature
+                        attribution were bypassed.
                     </div>
                 </div>
                 {% endif %}
@@ -142,17 +196,18 @@
                     <h5 class="text-white fw-bold mb-3">
                         <i class="fa-solid fa-chart-line text-cyber-blue me-2"></i> Detection Confidence Score
                     </h5>
-                    
+
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-white fw-bold">Scan Confidence:</span>
-                        <span class="fs-4 fw-extrabold {% if result.is_malware %}text-danger{% else %}text-success{% endif %}">
+                        <span
+                            class="fs-4 fw-extrabold {% if result.is_malware %}text-danger{% else %}text-success{% endif %}">
                             {{ result.confidence_score }}%
                         </span>
                     </div>
 
                     <div class="progress cyber-progress rounded-pill bg-dark mb-4" style="height: 18px;">
-                        <div class="progress-bar {% if result.is_malware %}bg-danger{% else %}bg-success{% endif %} progress-bar-striped progress-bar-animated" 
-                             role="progressbar" style="width: {{ result.confidence_score }}%;">
+                        <div class="progress-bar {% if result.is_malware %}bg-danger{% else %}bg-success{% endif %} progress-bar-striped progress-bar-animated"
+                            role="progressbar" style="width: {{ result.confidence_score }}%;">
                         </div>
                     </div>
 
@@ -194,12 +249,16 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                         <div>
                             <h5 class="text-white fw-bold mb-0">
-                                <i class="fa-solid fa-code-compare text-cyber-blue me-2"></i> Dual-Model Head-to-Head Comparison
+                                <i class="fa-solid fa-code-compare text-cyber-blue me-2"></i> Dual-Model Head-to-Head
+                                Comparison
                             </h5>
-                            <span class="text-cyber-muted small">Live empirical evaluation: Full Baseline (2,381 Features) vs Proposed Stable (Top-{{ result.comparison.proposed_stable.k }} Features)</span>
+                            <span class="text-cyber-muted small">Live empirical evaluation: Full Baseline (2,381
+                                Features) vs Proposed Stable (Top-{{ result.comparison.proposed_stable.k }}
+                                Features)</span>
                         </div>
                         <span class="badge bg-cyber-gradient text-white px-3 py-2 rounded-pill fw-bold">
-                            Active Subset: Top-{{ result.comparison.proposed_stable.k }} ({{ result.comparison.proposed_stable.pruning_pct }}% Pruned)
+                            Active Subset: Top-{{ result.comparison.proposed_stable.k }} ({{
+                            result.comparison.proposed_stable.pruning_pct }}% Pruned)
                         </span>
                     </div>
 
@@ -209,10 +268,13 @@
                             <thead>
                                 <tr class="bg-cyber-dark">
                                     <th class="w-50 py-3 text-uppercase text-secondary fw-bold fs-6">
-                                        <i class="fa-solid fa-layer-group me-1"></i> {{ result.comparison.full_baseline.title }}
+                                        <i class="fa-solid fa-layer-group me-1"></i> {{
+                                        result.comparison.full_baseline.title }}
                                     </th>
-                                    <th class="w-50 py-3 text-uppercase text-cyber-blue fw-bold fs-6 border-start border-cyber bg-dark-card">
-                                        <i class="fa-solid fa-microchip me-1"></i> {{ result.comparison.proposed_stable.title }}
+                                    <th
+                                        class="w-50 py-3 text-uppercase text-cyber-blue fw-bold fs-6 border-start border-cyber bg-dark-card">
+                                        <i class="fa-solid fa-microchip me-1"></i> {{
+                                        result.comparison.proposed_stable.title }}
                                     </th>
                                 </tr>
                             </thead>
@@ -220,13 +282,15 @@
                                 <tr>
                                     <td class="py-3">
                                         <span class="text-secondary small d-block">Verdict:</span>
-                                        <span class="fs-5 fw-extrabold {% if result.comparison.full_baseline.is_malware %}text-danger{% else %}text-success{% endif %}">
+                                        <span
+                                            class="fs-5 fw-extrabold {% if result.comparison.full_baseline.is_malware %}text-danger{% else %}text-success{% endif %}">
                                             {{ result.comparison.full_baseline.verdict }}
                                         </span>
                                     </td>
                                     <td class="py-3 border-start border-cyber bg-dark-card">
                                         <span class="text-cyber-muted small d-block">Verdict:</span>
-                                        <span class="fs-5 fw-extrabold {% if result.comparison.proposed_stable.is_malware %}text-danger{% else %}text-success{% endif %}">
+                                        <span
+                                            class="fs-5 fw-extrabold {% if result.comparison.proposed_stable.is_malware %}text-danger{% else %}text-success{% endif %}">
                                             {{ result.comparison.proposed_stable.verdict }}
                                         </span>
                                     </td>
@@ -234,34 +298,41 @@
                                 <tr>
                                     <td class="py-3">
                                         <span class="text-secondary small d-block">Confidence:</span>
-                                        <span class="fs-5 fw-bold text-white">{{ result.comparison.full_baseline.confidence }}%</span>
+                                        <span class="fs-5 fw-bold text-white">{{
+                                            result.comparison.full_baseline.confidence }}%</span>
                                     </td>
                                     <td class="py-3 border-start border-cyber bg-dark-card">
                                         <span class="text-cyber-muted small d-block">Confidence:</span>
-                                        <span class="fs-5 fw-bold text-cyber-blue">{{ result.comparison.proposed_stable.confidence }}%</span>
+                                        <span class="fs-5 fw-bold text-cyber-blue">{{
+                                            result.comparison.proposed_stable.confidence }}%</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="py-3">
                                         <span class="text-secondary small d-block">Latency:</span>
-                                        <span class="fs-6 fw-bold text-secondary">{{ result.comparison.full_baseline.latency_ms }} ms</span>
+                                        <span class="fs-6 fw-bold text-secondary">{{
+                                            result.comparison.full_baseline.latency_ms }} ms</span>
                                     </td>
                                     <td class="py-3 border-start border-cyber bg-dark-card">
                                         <span class="text-cyber-muted small d-block">Latency:</span>
                                         <span class="fs-6 fw-bold text-success">
-                                            {{ result.comparison.proposed_stable.latency_ms }} ms 
-                                            <span class="badge bg-success-subtle text-success border border-success ms-1">({{ result.comparison.proposed_stable.speedup_text }})</span>
+                                            {{ result.comparison.proposed_stable.latency_ms }} ms
+                                            <span
+                                                class="badge bg-success-subtle text-success border border-success ms-1">({{
+                                                result.comparison.proposed_stable.speedup_text }})</span>
                                         </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="py-3">
                                         <span class="text-secondary small d-block">Dimensions:</span>
-                                        <span class="fs-6 fw-bold text-secondary">{{ result.comparison.full_baseline.dimensions }}</span>
+                                        <span class="fs-6 fw-bold text-secondary">{{
+                                            result.comparison.full_baseline.dimensions }}</span>
                                     </td>
                                     <td class="py-3 border-start border-cyber bg-dark-card">
                                         <span class="text-cyber-muted small d-block">Dimensions:</span>
-                                        <span class="fs-6 fw-bold text-warning">{{ result.comparison.proposed_stable.dimensions }}</span>
+                                        <span class="fs-6 fw-bold text-warning">{{
+                                            result.comparison.proposed_stable.dimensions }}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -275,9 +346,11 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                         <div>
                             <h5 class="text-white fw-bold mb-1">
-                                <i class="fa-solid fa-brain text-cyber-blue me-2"></i> Top 5 Contributing Stable Features (Explainable AI)
+                                <i class="fa-solid fa-brain text-cyber-blue me-2"></i> Top 5 Contributing Stable
+                                Features (Explainable AI)
                             </h5>
-                            <p class="text-cyber-muted small mb-0">Feature attribution ranking the key invariant PE attributes that drove the model's verdict for this binary</p>
+                            <p class="text-cyber-muted small mb-0">Feature attribution ranking the key invariant PE
+                                attributes that drove the model's verdict for this binary</p>
                         </div>
                         <span class="badge bg-info-subtle text-info border border-info px-3 py-2 fw-bold">
                             <i class="fa-solid fa-magnifying-glass-chart me-1"></i> XAI Feature Attribution
@@ -290,24 +363,37 @@
                         <div class="list-group-item bg-dark-card text-white border-cyber p-3">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
                                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <span class="badge bg-cyber-gradient text-white fw-extrabold fs-6 px-2 py-1">#{{ feat.rank }}</span>
-                                    <span class="badge bg-secondary-subtle text-info border border-secondary px-2 py-1 font-monospace">
+                                    <span class="badge bg-cyber-gradient text-white fw-extrabold fs-6 px-2 py-1">#{{
+                                        feat.rank }}</span>
+                                    <span
+                                        class="badge bg-secondary-subtle text-info border border-secondary px-2 py-1 font-monospace">
                                         [{{ feat.category }}]
                                     </span>
                                     <span class="fw-bold text-white fs-6">{{ feat.name }}</span>
-                                    <span class="text-secondary small font-monospace">[Index {{ feat.global_index }}]</span>
+                                    <span class="text-secondary small font-monospace">[Index {{ feat.global_index
+                                        }}]</span>
                                 </div>
                                 <div class="text-end font-monospace">
-                                    <span class="text-cyber-muted small me-2">Impact:</span>
-                                    <span class="fw-bold text-success fs-6">{{ feat.impact_formatted }}</span>
+                                    <span
+                                        class="badge {% if feat.delta_probability and feat.delta_probability > 0 %}bg-danger-subtle text-danger border border-danger{% else %}bg-success-subtle text-success border border-success{% endif %} px-2 py-1">
+                                        <i
+                                            class="fa-solid {% if feat.delta_probability and feat.delta_probability > 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %} me-1"></i>
+                                        {{ feat.impact_formatted }} {% if feat.direction %}({{ feat.direction }}){%
+                                        endif %}
+                                    </span>
                                 </div>
                             </div>
-                            
-                            <div class="p-2 rounded-2 bg-cyber-dark border border-cyber text-light small d-flex align-items-start gap-2">
+
+                            <div
+                                class="p-2 rounded-2 bg-cyber-dark border border-cyber text-light small d-flex align-items-start gap-2">
                                 <i class="fa-solid fa-shield-halved text-cyber-blue mt-1"></i>
                                 <div>
                                     <strong>Security Interpretation:</strong> {{ feat.explanation }}
-                                    <span class="text-cyber-muted ms-2">(Extracted Value: <code class="text-warning">{{ feat.value }}</code> | Weight: <code class="text-info">{{ feat.importance }}</code>)</span>
+                                    <span class="text-cyber-muted ms-2">(Value: <code
+                                            class="text-warning">{{ feat.value }}</code> | Model Weight: <code
+                                            class="text-info">{{ feat.importance }}</code>{% if feat.delta_pct is
+                                        defined %} | Probability Shift: <code
+                                            class="text-white">{{ feat.impact_formatted }}</code>{% endif %})</span>
                                 </div>
                             </div>
                         </div>
@@ -319,15 +405,24 @@
                 <!-- 4. RESEARCH BENCHMARK & METHODOLOGY SECTION (SEPARATE CARD) -->
                 <div class="cyber-card p-4 rounded-4 shadow mb-4">
                     <h5 class="text-white fw-bold mb-3">
-                        <i class="fa-solid fa-graduation-cap text-cyber-blue me-2"></i> Cross-Dataset Stable PE Feature Selection (Research Methodology)
+                        <i class="fa-solid fa-graduation-cap text-cyber-blue me-2"></i> Cross-Dataset Stable PE Feature
+                        Selection (Research Methodology)
                     </h5>
-                    
+
                     <div class="p-3 rounded-3 bg-dark-card border border-secondary mb-3 small text-light lh-lg">
                         <p class="mb-2">
-                            <strong>The Problem:</strong> Models trained on a single year's dataset (e.g. EMBER 2018) rapidly decay over time because they overfit to transient temporal artifacts (e.g., year-specific import table hashes or compiler versions) that adversaries modify or deprecate.
+                            <strong>The Problem:</strong> Models trained on a single year's dataset (e.g. EMBER 2018)
+                            rapidly decay over time because they overfit to transient temporal artifacts (e.g.,
+                            year-specific import table hashes or compiler versions) that adversaries modify or
+                            deprecate.
                         </p>
                         <p class="mb-0">
-                            <strong>Multi-Year Consensus:</strong> Our algorithm measures feature stability across independent temporal distributions (<strong>EMBER 2017 v2</strong> and <strong>EMBER 2018</strong>). Only features that consistently retain high discriminative power across both years are selected into the <strong>Top-K Consensus Subset</strong>, recovering <strong>+295 missed threats (false negatives)</strong> under temporal distribution shift on the 2020 BODMAS benchmark.
+                            <strong>Multi-Year Consensus:</strong> Our algorithm measures feature stability across
+                            independent temporal distributions (<strong>EMBER 2017 v2</strong> and <strong>EMBER
+                                2018</strong>). Only features that consistently retain high discriminative power across
+                            both years are selected into the <strong>Top-K Consensus Subset</strong>, recovering
+                            <strong>+295 missed threats (false negatives)</strong> under temporal distribution shift on
+                            the 2020 BODMAS benchmark.
                         </p>
                     </div>
 
@@ -393,7 +488,8 @@
                         <div class="col-6 col-md-3">
                             <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
                                 <div class="text-cyber-muted small">File Size</div>
-                                <div class="fw-bold text-white fs-5">{{ (result.metadata.file_size_bytes / 1024)|round(1) }} KB</div>
+                                <div class="fw-bold text-white fs-5">{{ (result.metadata.file_size_bytes /
+                                    1024)|round(1) }} KB</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
@@ -405,7 +501,8 @@
                         <div class="col-6 col-md-3">
                             <div class="p-3 bg-cyber-dark rounded-3 border border-cyber">
                                 <div class="text-cyber-muted small">PE Binary Format</div>
-                                <div class="fw-bold {% if result.metadata.is_pe_header %}text-success{% else %}text-warning{% endif %} fs-5">
+                                <div
+                                    class="fw-bold {% if result.metadata.is_pe_header %}text-success{% else %}text-warning{% endif %} fs-5">
                                     {{ "Valid PE (MZ)" if result.metadata.is_pe_header else "Raw Binary" }}
                                 </div>
                             </div>
@@ -439,4 +536,5 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

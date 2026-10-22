@@ -1,51 +1,51 @@
 Stable_Rank,Feature_Index,Feature_Name,Category,Importance_2017,Importance_2018,Rank_2017,Rank_2018,Mean_Rank
 1,637,COFF Characteristics Hash [0],PE Header,0.022408,0.032942,1,2,1.5
-2,626,COFF Timestamp,PE Header,0.014062,0.03385,2,1,1.5
-3,499,Byte Entropy Histogram [Bin 243],Byte Entropy,0.012905,0.013175,4,5,4.5
-4,510,Byte Entropy Histogram [Bin 254],Byte Entropy,0.011473,0.013675,5,4,4.5
-5,506,Byte Entropy Histogram [Bin 250],Byte Entropy,0.00966,0.014296,10,3,6.5
-6,505,Byte Entropy Histogram [Bin 249],Byte Entropy,0.009697,0.012955,9,6,7.5
-7,501,Byte Entropy Histogram [Bin 245],Byte Entropy,0.009913,0.012007,8,8,8.0
-8,504,Byte Entropy Histogram [Bin 248],Byte Entropy,0.013998,0.008675,3,18,10.5
-9,90,Byte Histogram [0x5A],Byte Histogram,0.00761,0.011415,14,9,11.5
-10,500,Byte Entropy Histogram [Bin 244],Byte Entropy,0.00681,0.012129,18,7,12.5
-11,502,Byte Entropy Histogram [Bin 246],Byte Entropy,0.00682,0.011239,17,10,13.5
-12,503,Byte Entropy Histogram [Bin 247],Byte Entropy,0.009407,0.008715,11,17,14.0
-13,218,Byte Histogram [0xDA],Byte Histogram,0.00762,0.008264,13,19,16.0
-14,244,Byte Histogram [0xF4],Byte Histogram,0.006022,0.009427,26,12,19.0
-15,496,Byte Entropy Histogram [Bin 240],Byte Entropy,0.006566,0.007587,19,22,20.5
-16,222,Byte Histogram [0xDE],Byte Histogram,0.010744,0.004722,6,37,21.5
-17,253,Byte Histogram [0xFD],Byte Histogram,0.005198,0.006408,28,23,25.5
-18,186,Byte Histogram [0xBA],Byte Histogram,0.004947,0.005877,29,28,28.5
-19,2354,Data Directory [Import Table Size],Data Directories,0.00649,0.00439,20,40,30.0
-20,596,Printable Char Dist ['r'],Strings,0.003435,0.009373,48,13,30.5
-21,509,Byte Entropy Histogram [Bin 253],Byte Entropy,0.004881,0.005414,31,31,31.0
-22,155,Byte Histogram [0x9B],Byte Histogram,0.003761,0.008088,44,21,32.5
-23,177,Byte Histogram [0xB1],Byte Histogram,0.003888,0.006013,42,26,34.0
-24,498,Byte Entropy Histogram [Bin 242],Byte Entropy,0.003141,0.008901,53,16,34.5
-25,534,Printable Char Dist ['4'],Strings,0.00394,0.005597,41,30,35.5
-26,692,Section Stat [Writable Sections Count],Section,0.007269,0.003353,15,65,40.0
-27,508,Byte Entropy Histogram [Bin 252],Byte Entropy,0.004072,0.004184,39,44,41.5
-28,157,Byte Histogram [0x9D],Byte Histogram,0.003246,0.004747,49,36,42.5
-29,226,Byte Histogram [0xE2],Byte Histogram,0.004832,0.003464,32,62,47.0
-30,187,Byte Histogram [0xBB],Byte Histogram,0.002307,0.009194,83,14,48.5
-31,655,Subsystem Hash [8],PE Header,0.002579,0.005823,69,29,49.0
-32,167,Byte Histogram [0xA7],Byte Histogram,0.003152,0.004037,52,49,50.5
-33,511,Byte Entropy Histogram [Bin 255],Byte Entropy,0.003545,0.003544,46,57,51.5
-34,2353,Data Directory [Import Table RVA],Data Directories,0.003245,0.003691,50,54,52.0
-35,242,Byte Histogram [0xF2],Byte Histogram,0.002717,0.004633,67,38,52.5
-36,105,Byte Histogram [0x69],Byte Histogram,0.002791,0.004367,64,41,52.5
-37,159,Byte Histogram [0x9F],Byte Histogram,0.002986,0.003959,59,50,54.5
-38,640,COFF Characteristics Hash [3],PE Header,0.004313,0.002859,36,76,56.0
-39,89,Byte Histogram [0x59],Byte Histogram,0.002349,0.00478,79,34,56.5
-40,507,Byte Entropy Histogram [Bin 251],Byte Entropy,0.005798,0.002522,27,86,56.5
-41,151,Byte Histogram [0x97],Byte Histogram,0.002051,0.009185,100,15,57.5
-42,2359,Data Directory [Certificate Table RVA],Data Directories,0.002345,0.004759,80,35,57.5
-43,223,Byte Histogram [0xDF],Byte Histogram,0.00307,0.0035,56,60,58.0
-44,163,Byte Histogram [0xA3],Byte Histogram,0.003045,0.003513,57,59,58.0
-45,190,Byte Histogram [0xBE],Byte Histogram,0.002082,0.006393,97,24,60.5
-46,497,Byte Entropy Histogram [Bin 241],Byte Entropy,0.006155,0.002134,24,97,60.5
-47,111,Byte Histogram [0x6F],Byte Histogram,0.002207,0.004826,89,33,61.0
-48,142,Byte Histogram [0x8E],Byte Histogram,0.003976,0.002632,40,82,61.0
-49,2364,Data Directory [Debug Directory Size],Data Directories,0.00795,0.001765,12,114,63.0
-50,114,Byte Histogram [0x72],Byte Histogram,0.002392,0.003906,76,51,63.5
+2,499,Byte Entropy Histogram [Bin 243],Byte Entropy,0.012905,0.013175,4,5,4.5
+3,510,Byte Entropy Histogram [Bin 254],Byte Entropy,0.011473,0.013675,5,4,4.5
+4,506,Byte Entropy Histogram [Bin 250],Byte Entropy,0.00966,0.014296,10,3,6.5
+5,505,Byte Entropy Histogram [Bin 249],Byte Entropy,0.009697,0.012955,9,6,7.5
+6,501,Byte Entropy Histogram [Bin 245],Byte Entropy,0.009913,0.012007,8,8,8.0
+7,504,Byte Entropy Histogram [Bin 248],Byte Entropy,0.013998,0.008675,3,18,10.5
+8,90,Byte Histogram [0x5A],Byte Histogram,0.00761,0.011415,14,9,11.5
+9,500,Byte Entropy Histogram [Bin 244],Byte Entropy,0.00681,0.012129,18,7,12.5
+10,502,Byte Entropy Histogram [Bin 246],Byte Entropy,0.00682,0.011239,17,10,13.5
+11,503,Byte Entropy Histogram [Bin 247],Byte Entropy,0.009407,0.008715,11,17,14.0
+12,218,Byte Histogram [0xDA],Byte Histogram,0.00762,0.008264,13,19,16.0
+13,244,Byte Histogram [0xF4],Byte Histogram,0.006022,0.009427,26,12,19.0
+14,496,Byte Entropy Histogram [Bin 240],Byte Entropy,0.006566,0.007587,19,22,20.5
+15,222,Byte Histogram [0xDE],Byte Histogram,0.010744,0.004722,6,37,21.5
+16,253,Byte Histogram [0xFD],Byte Histogram,0.005198,0.006408,28,23,25.5
+17,186,Byte Histogram [0xBA],Byte Histogram,0.004947,0.005877,29,28,28.5
+18,2354,Data Directory [Import Table Size],Data Directories,0.00649,0.00439,20,40,30.0
+19,596,Printable Char Dist ['r'],Strings,0.003435,0.009373,48,13,30.5
+20,509,Byte Entropy Histogram [Bin 253],Byte Entropy,0.004881,0.005414,31,31,31.0
+21,155,Byte Histogram [0x9B],Byte Histogram,0.003761,0.008088,44,21,32.5
+22,177,Byte Histogram [0xB1],Byte Histogram,0.003888,0.006013,42,26,34.0
+23,498,Byte Entropy Histogram [Bin 242],Byte Entropy,0.003141,0.008901,53,16,34.5
+24,534,Printable Char Dist ['4'],Strings,0.00394,0.005597,41,30,35.5
+25,692,Section Stat [Writable Sections Count],Section,0.007269,0.003353,15,65,40.0
+26,508,Byte Entropy Histogram [Bin 252],Byte Entropy,0.004072,0.004184,39,44,41.5
+27,157,Byte Histogram [0x9D],Byte Histogram,0.003246,0.004747,49,36,42.5
+28,226,Byte Histogram [0xE2],Byte Histogram,0.004832,0.003464,32,62,47.0
+29,187,Byte Histogram [0xBB],Byte Histogram,0.002307,0.009194,83,14,48.5
+30,655,Subsystem Hash [8],PE Header,0.002579,0.005823,69,29,49.0
+31,167,Byte Histogram [0xA7],Byte Histogram,0.003152,0.004037,52,49,50.5
+32,511,Byte Entropy Histogram [Bin 255],Byte Entropy,0.003545,0.003544,46,57,51.5
+33,2353,Data Directory [Import Table RVA],Data Directories,0.003245,0.003691,50,54,52.0
+34,242,Byte Histogram [0xF2],Byte Histogram,0.002717,0.004633,67,38,52.5
+35,105,Byte Histogram [0x69],Byte Histogram,0.002791,0.004367,64,41,52.5
+36,159,Byte Histogram [0x9F],Byte Histogram,0.002986,0.003959,59,50,54.5
+37,640,COFF Characteristics Hash [3],PE Header,0.004313,0.002859,36,76,56.0
+38,89,Byte Histogram [0x59],Byte Histogram,0.002349,0.00478,79,34,56.5
+39,507,Byte Entropy Histogram [Bin 251],Byte Entropy,0.005798,0.002522,27,86,56.5
+40,151,Byte Histogram [0x97],Byte Histogram,0.002051,0.009185,100,15,57.5
+41,2359,Data Directory [Certificate Table RVA],Data Directories,0.002345,0.004759,80,35,57.5
+42,223,Byte Histogram [0xDF],Byte Histogram,0.00307,0.0035,56,60,58.0
+43,163,Byte Histogram [0xA3],Byte Histogram,0.003045,0.003513,57,59,58.0
+44,190,Byte Histogram [0xBE],Byte Histogram,0.002082,0.006393,97,24,60.5
+45,497,Byte Entropy Histogram [Bin 241],Byte Entropy,0.006155,0.002134,24,97,60.5
+46,111,Byte Histogram [0x6F],Byte Histogram,0.002207,0.004826,89,33,61.0
+47,142,Byte Histogram [0x8E],Byte Histogram,0.003976,0.002632,40,82,61.0
+48,2364,Data Directory [Debug Directory Size],Data Directories,0.00795,0.001765,12,114,63.0
+49,114,Byte Histogram [0x72],Byte Histogram,0.002392,0.003906,76,51,63.5
+50,202,Byte Histogram [0xCA],Byte Histogram,0.00257,0.003544,70,58,64.0
